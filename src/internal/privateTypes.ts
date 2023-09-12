@@ -26,6 +26,8 @@ export interface NetInfoNativeModule {
   getCurrentState: (
     requestedInterface?: string,
   ) => Promise<NetInfoNativeModuleState>;
+  getGatewayIPAddress: (
+  ) => Promise<number | null>;
   addListener<K extends keyof Events>(
     type: K,
     listener: (event: Events[K]) => void,

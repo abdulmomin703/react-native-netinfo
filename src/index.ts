@@ -126,6 +126,10 @@ export function useNetInfo(
   return netInfo;
 }
 
+export async function getGatewayIPAddress() {
+  console.log("what a paratha", NativeInterface)
+  return await NativeInterface.getGatewayIPAddress();
+}
 export * from './internal/types';
 
 export default {
@@ -134,4 +138,5 @@ export default {
   refresh,
   addEventListener,
   useNetInfo,
+  getGatewayIPAddress
 };
