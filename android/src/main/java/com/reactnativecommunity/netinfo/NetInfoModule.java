@@ -5,7 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 package com.reactnativecommunity.netinfo;
-
+import android.net.wifi.WifiManager;
+import android.net.DhcpInfo;
+import android.content.Context;
 import android.os.Build;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -16,6 +18,7 @@ import com.facebook.react.module.annotations.ReactModule;
 /** Module that monitors and provides information about the connectivity state of the device. */
 @ReactModule(name = NetInfoModule.NAME)
 public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonFireDeviceConnectivityPoller.ConnectivityChangedCallback {
+    WifiManager wifi;
     public static final String NAME = "RNCNetInfo";
 
     private final ConnectivityReceiver mConnectivityReceiver;
@@ -31,7 +34,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
         } else {
             mConnectivityReceiver = new BroadcastReceiverConnectivityReceiver(reactContext);
         }
-
+        wifi = (WifiManager) reactContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mAmazonConnectivityChecker = new AmazonFireDeviceConnectivityPoller(reactContext, this);
     }
 
@@ -56,6 +59,28 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     @ReactMethod
     public void getCurrentState(final String requestedInterface, final Promise promise) {
         mConnectivityReceiver.getCurrentState(requestedInterface, promise);
+    }
+
+    @ReactMethod
+    public void getGatewayIPAddress(final Promise promise) throws Exception {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    DhcpInfo dhcpInfo = wifi.getDhcpInfo();
+                    int gatewayIPInt = dhcpInfo.gateway;
+                    String gatewayIP = String.format(
+                      "%d.%d.%d.%d",
+                      ((gatewayIPInt) & 0xFF),
+                      ((gatewayIPInt >> 8 ) & 0xFF),
+                      ((gatewayIPInt >> 16) & 0xFF),
+                      ((gatewayIPInt >> 24) & 0xFF)
+                    );
+                    promise.resolve(gatewayIP);
+                } catch (Exception e) {
+                    promise.resolve(null);
+                }
+            }
+        }).start();
     }
 
     @Override

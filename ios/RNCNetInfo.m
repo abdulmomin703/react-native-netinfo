@@ -107,26 +107,15 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
 RCT_EXPORT_METHOD(getGatewayIPAddress:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
-    NSLog(@"Inner 1");
     @try{
-        NSLog(@"Inner 2");
         NSString *ipString = nil;
-        NSLog(@"Inner 3");
         struct in_addr gatewayaddr;
-        NSLog(@"Inner 4");
         int r = getdefaultgateway(&(gatewayaddr.s_addr));
-        NSLog(@"Inner 5 %d",r);
         if(r >= 0) {
-            NSLog(@"Inner 6");
             ipString = [NSString stringWithFormat: @"%s",inet_ntoa(gatewayaddr)];
-            
-            NSLog(@"Inner 7");
     	}
-        NSLog(@"Inner 8");
         resolve(ipString);
-        NSLog(@"Inner 9");
     }@catch (NSException *exception) {
-        NSLog(@"Inner 10");
         resolve(NULL);
     }
 }
