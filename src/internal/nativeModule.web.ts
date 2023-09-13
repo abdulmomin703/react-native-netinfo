@@ -300,6 +300,10 @@ const RNCNetInfo: NetInfoNativeModule = {
   configure(): void {
     return;
   },
+
+  async getGatewayIPAddress ():  Promise<number | null>{
+    return 1;
+  }
 };
 
 export default RNCNetInfo;
