@@ -127,7 +127,6 @@ export function useNetInfo(
 }
 
 export async function getGatewayIPAddress() {
-  console.log("what a paratha", NativeInterface)
   return await NativeInterface.getGatewayIPAddress();
 }
 export * from './internal/types';

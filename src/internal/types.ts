@@ -30,6 +30,7 @@ export enum NetInfoCellularGeneration {
 
 export interface NetInfoConnectedDetails {
   isConnectionExpensive: boolean;
+  ipAddress:string;
 }
 
 interface NetInfoConnectedState<
